@@ -46,6 +46,7 @@ def moji_kaitou(miss_list):
             break
     return res
 
+
 if __name__ == "__main__":
     st = datetime.datetime.now()
     while True:
