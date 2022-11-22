@@ -8,7 +8,6 @@ miss_count = 0
 def set_quiz():
     global chars_num
     global miss_num
-
     chars = []
     while (len(chars) < chars_num):
         char = random.randint(65, 90)
@@ -16,16 +15,13 @@ def set_quiz():
             chars.append(chr(char))
     print("対象文字：")
     print(chars)
-
     miss = []
     for i in range(miss_num):
         n = random.randint(0, chars_num - (1+i))
         miss.append(chars.pop(n))
-    
     random.shuffle(chars)
     print("表示文字：")
     print(chars)
-    
     return miss
 
 def num_kaitou():
@@ -62,7 +58,6 @@ if __name__ == "__main__":
             print("不正解です。またチャレンジしてください。")
             miss_count += 1
             continue
-
         mres = moji_kaitou(miss_list)
         if mres:
             print("正解です！！")
