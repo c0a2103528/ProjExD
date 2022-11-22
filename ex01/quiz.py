@@ -62,7 +62,7 @@ if __name__ == "__main__":
     kaitou(ans, answers, q_num, sec)
 
 
-def main():
+if __name__ == "__main__"
     answers = [["ますお", "マスオ"],
             ["わかめ", "ワカメ"],
             ["甥", "おい", "甥っ子", "おいっこ"]]

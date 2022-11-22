@@ -1,7 +1,9 @@
 import random
+import datetime
 
 chars_num = 10
 miss_num = 2
+miss_count = 0
 
 def set_quiz():
     global chars_num
@@ -50,6 +52,7 @@ def moji_kaitou(miss_list):
 
 
 if __name__ == "__main__":
+    st = datetime.datetime.now()
     while True:
         miss_list = set_quiz()
         nres = num_kaitou()
@@ -57,6 +60,7 @@ if __name__ == "__main__":
             print("正解です。それでは、具体的に欠損文字を1つずつ入力して下さい")
         else:
             print("不正解です。またチャレンジしてください。")
+            miss_count += 1
             continue
 
         mres = moji_kaitou(miss_list)
@@ -65,5 +69,15 @@ if __name__ == "__main__":
             break
         else:
             print("不正解です。またチャレンジしてください。")
+            miss_count += 1
+    ed = datetime.datetime.now()
+    sec = (ed-st).seconds
+    if sec < 60:
+        print(f"回答時間：{sec}秒")
+    else:
+        min = sec // 60
+        sec -= min * 60
+        print(f"回答時間：{min}分{sec}秒")
+    print(f"間違えた回数：{miss_count}")
 
 
