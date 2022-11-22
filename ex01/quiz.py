@@ -15,7 +15,7 @@ def main():
             print("正解！！！")
         else:
             print("出直してこい")
-        print(f"解答時間：{sec}秒")
+        print(f"回答時間：{sec}秒")
 
     answers = [["ますお", "マスオ"],
             ["わかめ", "ワカメ"],
@@ -54,11 +54,11 @@ def main():
 
     sec = (ed - st).seconds
     if sec < 60:
-        print(f"解答時間：{sec}秒")
+        print(f"回答時間：{sec}秒")
     else:
         min = sec // 60
         sec -= 60 * min
-        print(f"解答時間：{min}分{sec}秒")
+        print(f"回答時間：{min}分{sec}秒")
 """
 
 main()
