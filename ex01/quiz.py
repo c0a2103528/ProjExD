@@ -1,22 +1,23 @@
 from random import randint
 import datetime
 
-def main():
-    def shutudai(q, qn):
-        print("問題：")
-        print(q[qn])
-        st = datetime.datetime.now()
-        ans = input("答えるんだ：")
-        ed = datetime.datetime.now()
-        return ans, (ed-st).seconds
+def shutudai(q):
+    qn = randint(0, 2)
+    print("問題：")
+    print(q[qn])
+    st = datetime.datetime.now()
+    ans = input("答えるんだ：")
+    ed = datetime.datetime.now()
+    return qn, ans, (ed-st).seconds
 
-    def kaitou(answer, ans, i, sec):
-        if answer in ans[i]:
-            print("正解！！！")
-        else:
-            print("出直してこい")
-        print(f"回答時間：{sec}秒")
+def kaitou(answer, ans, i, sec):
+    if answer in ans[i]:
+        print("正解！！！")
+    else:
+        print("出直してこい")
+    print(f"回答時間：{sec}秒")
 
+if __name__ == "__main__":
     answers = [["ますお", "マスオ"],
             ["わかめ", "ワカメ"],
             ["甥", "おい", "甥っ子", "おいっこ"]]
@@ -25,10 +26,9 @@ def main():
             "カツオの妹の名前は？",
             "タラオはカツオから見てどんな関係？"]
 
-    quiz_num = randint(0, 2)
-    ans, sec = shutudai(quizzes, quiz_num)
+    q_num, ans, sec = shutudai(quizzes)
 
-    kaitou(ans, answers, quiz_num, sec)
+    kaitou(ans, answers, q_num, sec)
 
 """
 def main():
@@ -60,5 +60,3 @@ def main():
         sec -= 60 * min
         print(f"回答時間：{min}分{sec}秒")
 """
-
-main()
