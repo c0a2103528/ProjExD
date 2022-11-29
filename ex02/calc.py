@@ -21,7 +21,7 @@ def eq_button_click(event):
 root = tk.Tk()
 root.geometry("300x500")
 
-entry = tk.Entry(width = 10, font = ("", 40))
+entry = tk.Entry(justify = tk.RIGHT, width = 10, font = ("", 40))
 entry.get()
 entry.grid(column=0, row=0, columnspan=3)
 
