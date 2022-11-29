@@ -52,7 +52,6 @@ def by_button_click(event):
     entry.delete(0, tk.END)
     entry.insert(tk.END, res)
 
-
 # %ボタンをクリックしたときの動作
 def per_button_click(event):
     chars = entry.get()
