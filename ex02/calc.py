@@ -3,19 +3,22 @@ import tkinter as tk
 import tkinter.messagebox as tkm
 import math
 
-# 数字、四則演算ボタンをクリックしたときの動作
+# 数字、四則演算、mod、2乗ボタンをクリックしたときの動作
 def button_click(event):
     btn = event.widget
     txt = btn["text"]
-    if ((txt == "+") or (txt == "×") or (txt == "÷") or (txt == "-")):
-        n = len(entry.get())
-        if n <= 0:
+    n = len(entry.get())
+    if n <= 0:
+        if (txt == "×") or (txt == "÷"):
             return
-        else:
-            chars = entry.get()
-            ch = chars[-1]
-            if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
-                entry.delete(n-1, tk.END)
+        elif (txt == "+") or (txt == "-"):
+            entry.insert(tk.END, txt)
+            return
+    if (txt == "+") or (txt == "-") or (txt == "×") or (txt == "÷"):
+        chars = entry.get()
+        ch = chars[-1]
+        if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
+            entry.delete(n-1, tk.END)
     entry.insert(tk.END, txt)
 
 # バックスペースボタンをクリックしたときの動作
@@ -23,27 +26,37 @@ def bs_button_click(event):
     siki_len = len(entry.get())
     entry.delete(siki_len-1, tk.END)
 
-# 二乗ボタンをクリックしたときの動作
-def sqr_button_click(event):
-    num = eval(entry.get())
-    res =  num**2
-    entry.delete(0, tk.END)
-    entry.insert(tk.END, res)
-
 # 平方根ボタンをクリックしたときの動作
 def root_button_click(event):
-    num = eval(entry.get())
-    res = math.sqrt(num)
-    entry.delete(0, tk.END)
-    entry.insert(tk.END, res)
-
-# %ボタンをクリックしたときの動作
-def per_button_click(event):
     chars = entry.get()
     if len(chars) == 0:
         return
     ch = chars[-1]
     if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
+        return
+    num = eval(entry.get())
+    res = math.sqrt(num)
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, res)
+
+# binボタンをクリックしたときの動作
+def by_button_click(event):
+    chars = entry.get()
+    if len(chars) == 0:
+        return
+    ch = chars[-1]
+    if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
+        return
+    num = eval(entry.get())
+    res = bin(num)[2:]
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, res)
+
+
+# %ボタンをクリックしたときの動作
+def per_button_click(event):
+    chars = entry.get()
+    if len(chars) == 0:
         return
     num = eval(entry.get())
     num *= 100
@@ -55,7 +68,7 @@ def per_button_click(event):
 def del_button_click(event):
     entry.delete(0, tk.END)
 
-# =ボタンをクリックした際の
+# =ボタンをクリックしたときの動作
 def eq_button_click(event):
     chars = entry.get()
     if len(chars) == 0:
@@ -63,9 +76,40 @@ def eq_button_click(event):
     ch = chars[-1]
     if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
         return
-    s = chars.replace("×", "*")
-    sw = s.replace("÷", "/")
-    res = eval(sw)
+    s = chars.replace("×", "*")     #掛け算の処理
+    sw = s.replace("÷", "/")        #割り算の処理
+    swm = sw.replace("mod", "%")    #modの処理
+    swm2 = swm.replace("^2", "**2") #2乗の処理
+    res = eval(swm2)
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, res)
+
+# +/-ボタンをクリックしたときの動作
+def pm_button_click(event):
+    chars = entry.get()
+    len_ch = len(chars)
+    if len_ch == 0:
+        return
+    ch = chars[-1]
+    if ((ch == "+") or (ch == "×") or (ch == "÷") or (ch == "-")):
+        return
+    if eval(chars) == 0:
+        return
+    i = len_ch - 1
+    while not ((chars[i] == "+") or (chars[i] == "×") or (chars[i] == "÷") or (chars[i] == "-") or i <= 0):
+        i -= 1
+    num = chars[i:]
+    if num[0] == "×" or num[0] == "÷":
+        ans = int(num[1:]) * -1
+    else:
+        ans = -1 * int(num)
+    if ans > 0:
+        res = chars[:i] + "+" +str(ans)
+    else:
+        if (chars[i] == "×") or (chars[i] == "÷"):
+            res = chars[:i+1] + "(" + str(ans) + ")"
+        else:
+            res = chars[:i] + str(ans)
     entry.delete(0, tk.END)
     entry.insert(tk.END, res)
 
@@ -137,21 +181,42 @@ button_bs.bind('<Leave>', leave_bg)
 # %ボタンの作成
 button_per = tk.Button(root, text="%", width = w, height = h, font=("", f_size))
 button_per.bind("<1>", per_button_click)
-button_per.grid(column=0, row=1)
+button_per.grid(column=0, row=2)
 button_per.bind('<Enter>', enter_bg)
 button_per.bind('<Leave>', leave_bg)
 
 # 2乗ボタンの作成
-button_sqr = tk.Button(root, text="x^2", width = w, height = h, font=("", f_size))
-button_sqr.bind("<1>", sqr_button_click)
+button_sqr = tk.Button(root, text="^2", width = w, height = h, font=("", f_size))
+button_sqr.bind("<1>", button_click)
 button_sqr.grid(column=1, row=2)
 button_sqr.bind('<Enter>', enter_bg)
 button_sqr.bind('<Leave>', leave_bg)
 
 # 平方根ボタンの作成
-button_root = tk.Button(root, text="√x", width = w, height = h, font=("", f_size))
+button_root = tk.Button(root, text="√", width = w, height = h, font=("", f_size))
 button_root.bind("<1>", root_button_click)
 button_root.grid(column=2, row=2)
+button_root.bind('<Enter>', enter_bg)
+button_root.bind('<Leave>', leave_bg)
+
+# binボタンの作成
+button_root = tk.Button(root, text="bin", width = w, height = h, font=("", f_size))
+button_root.bind("<1>", by_button_click)
+button_root.grid(column=1, row=1)
+button_root.bind('<Enter>', enter_bg)
+button_root.bind('<Leave>', leave_bg)
+
+# modボタンの作成
+button_root = tk.Button(root, text="mod", width = w, height = h, font=("", f_size))
+button_root.bind("<1>", button_click)
+button_root.grid(column=0, row=1)
+button_root.bind('<Enter>', enter_bg)
+button_root.bind('<Leave>', leave_bg)
+
+# +/-ボタンの作成
+button_root = tk.Button(root, text="+/-", width = w, height = h, font=("", f_size))
+button_root.bind("<1>", pm_button_click)
+button_root.grid(column=0, row=6)
 button_root.bind('<Enter>', enter_bg)
 button_root.bind('<Leave>', leave_bg)
 
