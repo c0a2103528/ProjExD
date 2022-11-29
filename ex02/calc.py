@@ -153,7 +153,7 @@ button_eq.grid(column=3, row=6)
 button_eq.bind('<Enter>', enter_bg)
 button_eq.bind('<Leave>', leave_bg)
 
-# 四則演算, 少雨数点ボタンの作成
+# 四則演算, 小数点ボタンの作成
 keys = ["+", "-", "×", "÷", "."]
 k_cr_list = [[3,5],[3,4],[3,3],[3,2],[2,6]]
 for i in range(5):
