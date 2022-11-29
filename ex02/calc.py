@@ -13,6 +13,11 @@ def  button_click(event):
     txt = btn["text"]
     entry.insert(tk.END, txt)
 
+def eq_button_click(event):
+    res = eval(entry.get())
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, res)
+
 root = tk.Tk()
 root.geometry("300x500")
 
@@ -32,8 +37,9 @@ for i in range(10):
     exec(gr_button)
 button_pl = tk.Button(root, text="+", width = 4, height = 2, font=("",30))
 button_pl.bind("<1>", button_click)
-button_eq = tk.Button(root, text="=", width = 4, height = 2, font=("",30))
 button_pl.grid(column=1, row=4)
+button_eq = tk.Button(root, text="=", width = 4, height = 2, font=("",30))
+button_eq.bind("<1>", eq_button_click)
 button_eq.grid(column=2, row=4)
 
 
