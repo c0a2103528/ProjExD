@@ -1,4 +1,5 @@
 import tkinter as tk
+import maze_maker
 
 def key_down(event):
     global key
@@ -9,15 +10,21 @@ def key_up(event):
     key = ""
 
 def main_proc():
-    global cx, cy, key
+    global mx, my, cx, cy
+    bx = mx; by = my
     if key == "Up":
-        cy -= 20
+        my -= 1
     elif key == "Down":
-        cy += 20
+        my += 1
     elif key == "Left":
-        cx -= 20
+        mx -= 1
     elif key == "Right":
-        cx += 20
+        mx += 1
+    if maze[mx][my] == 0:
+        cx = mx*100 + 50
+        cy = my*100 + 50
+    else:
+        mx = bx; my = by
     canvas.coords("tori", cx, cy)
     root.after(100, main_proc)
 
@@ -29,7 +36,12 @@ root.bind("<KeyRelease>", key_up)
 
 canvas = tk.Canvas(root, width=1500, height=900, bg = "black")
 canvas.pack()
-cx = 300; cy = 400
+
+maze = maze_maker.make_maze(15, 9)
+maze_maker.show_maze(canvas, maze)
+
+mx = 1; my = 1
+cx = mx*100 + 50; cy = my*100 + 50
 tori = tk.PhotoImage(file="ex03/fig/6.png")
 canvas.create_image(cx, cy, image=tori, tag="tori")
 key=""
