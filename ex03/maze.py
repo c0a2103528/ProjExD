@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as tkm
 import maze_maker
 
 def key_down(event):
@@ -12,21 +13,24 @@ def key_up(event):
 def main_proc():
     global mx, my, cx, cy
     bx = mx; by = my
-    if key == "Up":
+    if key == "Up":         #↑キーを入力したときの処理
         my -= 1
-    elif key == "Down":
+    elif key == "Down":     #↓キーを入力したときの処理
         my += 1
-    elif key == "Left":
+    elif key == "Left":     #←キーを入力したときの処理
         mx -= 1
-    elif key == "Right":
+    elif key == "Right":    #→キーを入力したときの処理
         mx += 1
-    if maze[mx][my] == 0:
+    if maze[mx][my] == 1:
+        mx = bx; my = by
+    else:
         cx = mx*100 + 50
         cy = my*100 + 50
-    else:
-        mx = bx; my = by
     canvas.coords("tori", cx, cy)
-    root.after(100, main_proc)
+    if maze[mx][my] == 3:
+        tkm.showinfo("Goal", "Congraturarions!!")
+    else:
+        root.after(100, main_proc)
 
 root = tk.Tk()
 root.title("迷えるこうかとん")
@@ -42,8 +46,8 @@ maze_maker.show_maze(canvas, maze)
 
 mx = 1; my = 1
 cx = mx*100 + 50; cy = my*100 + 50
-tori = tk.PhotoImage(file="ex03/fig/6.png")
-canvas.create_image(cx, cy, image=tori, tag="tori")
+tori = tk.PhotoImage(file="ex03/fig/2.png")
+IoC = canvas.create_image(cx, cy, image=tori, tag="tori")
 key=""
 main_proc()
 root.mainloop()
