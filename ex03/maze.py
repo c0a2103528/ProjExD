@@ -1,6 +1,8 @@
 import tkinter as tk
 import tkinter.messagebox as tkm
 import maze_maker
+from random import randint as rad
+import datetime
 
 # 再プレイの確認
 def check_replay(rep):
@@ -9,6 +11,22 @@ def check_replay(rep):
         setup()                 #再度初期設定を行う
     else:
         exit()                  #再度プレイしないとき、ウィンドウを閉じる
+
+# 時間による壁と道の変化
+# 未実装
+def move_wall():
+    global maze, times, rx, ry
+    for i in range(times):
+        if maze[rx[i]][ry[i]] == 0:
+            maze[rx[i]][ry[i]] = 1
+        else:
+            maze[rx[i]][ry[i]] = 0
+    rt = rad(1, 2)
+    maze_maker.show_maze(canvas, maze)
+    canvas.delete("tori")
+    canvas.create_image(cx, cy, image=tori, tag="tori")
+    root.after(3000*rt, move_wall)
+
 
 # ゴールまでにかかる時間のカウントダウン
 def count_down():
@@ -44,7 +62,7 @@ def key_up(event):
 
 # 初期設定
 def setup():
-    global mx, my, cx, cy, key, maze, tori, tmr, jid
+    global mx, my, cx, cy, key, maze, tori, tmr, jid, rx, ry, times
     tmr = 10
     jid = None
     label["fg"] = "black"           #ラベルの色を変更する
