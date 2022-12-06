@@ -10,8 +10,14 @@ def key_up(event):
     global key
     key = ""
 
+def setup():
+    global mx, my, cx, cy, key
+    mx = 1; my = 1
+    cx = mx*100+50; cy = my*100+50
+    key = ""
+
 def main_proc():
-    global mx, my, cx, cy
+    global mx, my, cx, cy, maze, tori
     bx = mx; by = my
     if key == "Up":         #↑キーを入力したときの処理
         my -= 1
@@ -28,9 +34,12 @@ def main_proc():
         cy = my*100 + 50
     canvas.coords("tori", cx, cy)
     if maze[mx][my] == 3:
-        tkm.showinfo("Goal", "Congraturarions!!")
-    else:
-        root.after(100, main_proc)
+        replay = tkm.askyesno("Goal", "Congraturarions!!\nDo you want to Play again?")  #ゴール判定
+        if replay == True:
+            setup()
+        else:
+            exit()
+    root.after(100, main_proc)
 
 root = tk.Tk()
 root.title("迷えるこうかとん")
@@ -41,13 +50,13 @@ root.bind("<KeyRelease>", key_up)
 canvas = tk.Canvas(root, width=1500, height=900, bg = "black")
 canvas.pack()
 
+mx = 0; my = 0
+cx = 0; cy = 0
+key = ""
+setup()
 maze = maze_maker.make_maze(15, 9)
 maze_maker.show_maze(canvas, maze)
-
-mx = 1; my = 1
-cx = mx*100 + 50; cy = my*100 + 50
 tori = tk.PhotoImage(file="ex03/fig/2.png")
-IoC = canvas.create_image(cx, cy, image=tori, tag="tori")
-key=""
+canvas.create_image(cx, cy, image=tori, tag="tori")
 main_proc()
 root.mainloop()
