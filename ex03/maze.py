@@ -11,10 +11,14 @@ def key_up(event):
     key = ""
 
 def setup():
-    global mx, my, cx, cy, key
+    global mx, my, cx, cy, key, maze, tori
     mx = 1; my = 1
     cx = mx*100+50; cy = my*100+50
     key = ""
+    maze = maze_maker.make_maze(15, 9)
+    maze_maker.show_maze(canvas, maze)
+    tori = tk.PhotoImage(file="ex03/fig/2.png")
+    canvas.create_image(cx, cy, image=tori, tag="tori")
 
 def main_proc():
     global mx, my, cx, cy, maze, tori
@@ -36,6 +40,7 @@ def main_proc():
     if maze[mx][my] == 3:
         replay = tkm.askyesno("Goal", "Congraturarions!!\nDo you want to Play again?")  #ゴール判定
         if replay == True:
+            canvas.delete("tori")
             setup()
         else:
             exit()
@@ -52,11 +57,8 @@ canvas.pack()
 
 mx = 0; my = 0
 cx = 0; cy = 0
-key = ""
+key = ""; tori = ""
+maze = []
 setup()
-maze = maze_maker.make_maze(15, 9)
-maze_maker.show_maze(canvas, maze)
-tori = tk.PhotoImage(file="ex03/fig/2.png")
-canvas.create_image(cx, cy, image=tori, tag="tori")
 main_proc()
 root.mainloop()
