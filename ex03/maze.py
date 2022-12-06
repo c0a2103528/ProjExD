@@ -45,7 +45,7 @@ def key_up(event):
 # 初期設定
 def setup():
     global mx, my, cx, cy, key, maze, tori, tmr, jid
-    tmr = 5
+    tmr = 10
     jid = None
     label["fg"] = "black"           #ラベルの色を変更する
     mx = 1; my = 1                  #画像の初期位置の設定
