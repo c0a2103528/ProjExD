@@ -106,10 +106,10 @@ if __name__ == "__main__":
     root.bind("<KeyPress>", key_down)
     root.bind("<KeyRelease>", key_up)
 
-    label = tk.Label(root, font=("", 80))
+    label = tk.Label(root, font=("", 80))   #カウントを表示するラベルの設定
     label.pack()
 
-    canvas = tk.Canvas(root, width=1500, height=1200, bg = "black")
+    canvas = tk.Canvas(root, width=1500, height=1200, bg = "black") #キャンバスの設定
     canvas.pack()
 
     tmr = 0                #グルーバル変数の設定
