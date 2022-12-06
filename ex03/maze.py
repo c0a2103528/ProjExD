@@ -14,6 +14,7 @@ def check_replay(rep):
 
 # 時間による壁と道の変化
 # 未実装
+"""
 def move_wall():
     global maze, times, rx, ry
     for i in range(times):
@@ -26,7 +27,7 @@ def move_wall():
     canvas.delete("tori")
     canvas.create_image(cx, cy, image=tori, tag="tori")
     root.after(3000*rt, move_wall)
-
+"""
 
 # ゴールまでにかかる時間のカウントダウン
 def count_down():
