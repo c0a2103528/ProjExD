@@ -2,6 +2,15 @@ import tkinter as tk
 import tkinter.messagebox as tkm
 import maze_maker
 
+def count_up():
+    global tmr
+    label["text"] = tmr
+    tmr = tmr+1
+    if maze[mx][my] == 3:
+        return
+    else:
+        root.after(1000, count_up)
+
 def key_down(event):
     global key
     key = event.keysym
@@ -11,7 +20,8 @@ def key_up(event):
     key = ""
 
 def setup():
-    global mx, my, cx, cy, key, maze, tori
+    global mx, my, cx, cy, key, maze, tori, tmr
+    tmr = 0
     mx = 1; my = 1
     cx = mx*100+50; cy = my*100+50
     key = ""
@@ -19,6 +29,7 @@ def setup():
     maze_maker.show_maze(canvas, maze)
     tori = tk.PhotoImage(file="ex03/fig/2.png")
     canvas.create_image(cx, cy, image=tori, tag="tori")
+    count_up()
 
 def main_proc():
     global mx, my, cx, cy, maze, tori
@@ -31,14 +42,19 @@ def main_proc():
         mx -= 1
     elif key == "Right":    #→キーを入力したときの処理
         mx += 1
+
     if maze[mx][my] == 1:
         mx = bx; my = by
     else:
         cx = mx*100 + 50
         cy = my*100 + 50
     canvas.coords("tori", cx, cy)
+
     if maze[mx][my] == 3:
-        replay = tkm.askyesno("Goal", "Congraturarions!!\nDo you want to Play again?")  #ゴール判定
+        canvas.delete("tori")
+        tori = tk.PhotoImage(file="ex03/fig/6.png")
+        canvas.create_image(cx, cy, image=tori, tag="tori")
+        replay = tkm.askyesno("Goal", f"Congraturarions!!\nPlay again?")  #ゴール判定
         if replay == True:
             canvas.delete("tori")
             setup()
@@ -46,19 +62,25 @@ def main_proc():
             exit()
     root.after(100, main_proc)
 
-root = tk.Tk()
-root.title("迷えるこうかとん")
-root.geometry("1500x900")
-root.bind("<KeyPress>", key_down)
-root.bind("<KeyRelease>", key_up)
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.title("迷えるこうかとん")
+    root.geometry("1500x900")
+    root.bind("<KeyPress>", key_down)
+    root.bind("<KeyRelease>", key_up)
 
-canvas = tk.Canvas(root, width=1500, height=900, bg = "black")
-canvas.pack()
+    label = tk.Label(root, font=("", 80))
+    label.pack()
 
-mx = 0; my = 0
-cx = 0; cy = 0
-key = ""; tori = ""
-maze = []
-setup()
-main_proc()
-root.mainloop()
+    canvas = tk.Canvas(root, width=1500, height=1200, bg = "black")
+    canvas.pack()
+
+    tmr = 0; jid = None
+    mx = 0; my = 0
+    cx = 0; cy = 0
+    key = ""; tori = ""
+    maze = []
+    setup()
+
+    main_proc()
+    root.mainloop()
