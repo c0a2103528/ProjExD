@@ -11,7 +11,6 @@ def check_bound(obj_rct, scr_rct):
         tate = -1
     return yoko, tate
 
-
 def main():
     clock =pg.time.Clock()
     pg.display.set_caption("逃げろ！こうかとん")
@@ -29,7 +28,6 @@ def main():
     tori_sfc2 = pg.transform.rotozoom(tori_sfc2, 0, 2.0)
     tori_sfc3 = pg.image.load("fig/10.png")      #爆弾に当たった時
     tori_sfc3 = pg.transform.rotozoom(tori_sfc3, 0, 2.0)
-
     tori_rct = tori_sfc1.get_rect()
     tori_rct.center = 900, 400
     scrn_sfc.blit(tori_sfc1, tori_rct)
@@ -41,8 +39,7 @@ def main():
     bomb_rct = bomb_sfc.get_rect()
     bomb_rct.centerx = random.randint(0, scrn_rct.width)
     bomb_rct.centery = random.randint(0, scrn_rct.height)
-    scrn_sfc.blit(bomb_sfc, bomb_rct) 
-    count = 0           #跳ね返った回数
+    scrn_sfc.blit(bomb_sfc, bomb_rct)
 
     #爆弾の初期移動方向の設定
     move_bomb = [-1, 1]
@@ -89,6 +86,7 @@ def main():
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
+        
         #時間経過による爆弾の速度変化
         change_speed = 0.001
         if vx > 0:
