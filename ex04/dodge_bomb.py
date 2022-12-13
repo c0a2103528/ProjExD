@@ -23,11 +23,16 @@ def main():
     pgbg_rct = pgbg_sfc.get_rect()
 
     #こうかとんの設定
-    tori_sfc = pg.image.load("fig/9.png")
-    tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
-    tori_rct = tori_sfc.get_rect()
+    tori_sfc1 = pg.image.load("fig/9.png")      #陸にいるとき
+    tori_sfc1 = pg.transform.rotozoom(tori_sfc1, 0, 2.0)
+    tori_sfc2 = pg.image.load("fig/3.png")      #空にいるとき
+    tori_sfc2 = pg.transform.rotozoom(tori_sfc2, 0, 2.0)
+    tori_sfc3 = pg.image.load("fig/10.png")      #爆弾に当たった時
+    tori_sfc3 = pg.transform.rotozoom(tori_sfc3, 0, 2.0)
+
+    tori_rct = tori_sfc1.get_rect()
     tori_rct.center = 900, 400
-    scrn_sfc.blit(tori_sfc, tori_rct) 
+    scrn_sfc.blit(tori_sfc1, tori_rct)
 
     #爆弾の設定
     bomb_sfc = pg.Surface((20, 20))
@@ -71,8 +76,12 @@ def main():
             tori_rct.centerx += 1
         if check_bound(tori_rct, scrn_rct) != (+1, +1):
             tori_rct.centerx = bf_x
-            tori_rct.centery = bf_y          
-        scrn_sfc.blit(tori_sfc, tori_rct) 
+            tori_rct.centery = bf_y
+        #こうかとんの画像の切り替え
+        if (tori_rct.centery >= 450):           #陸にいるとき(yが450以上のとき)
+            scrn_sfc.blit(tori_sfc1, tori_rct)
+        else:                                   #空にいるとき(yが450未満のとき)
+            scrn_sfc.blit(tori_sfc2, tori_rct) 
 
         #爆弾の移動
         bomb_rct.move_ip(vx, vy)
@@ -93,14 +102,17 @@ def main():
 
         #こうかとんとボールが重なった時
         if tori_rct.colliderect(bomb_rct):
+            #泣いている画像に変更
+            scrn_sfc.blit(pgbg_sfc, pgbg_rct)
+            scrn_sfc.blit(tori_sfc3, tori_rct)
             #「ゲームオーバー」の表示
             fonto = pg.font.Font(None, 120)
             txt1 = fonto.render("Game Over", True, "RED")
             txt2 = fonto.render(f"Your Score: {sec/1000:.1f} s", True, "BLACK")
             scrn_sfc.blit(txt1, (600, 300))
             scrn_sfc.blit(txt2, (500, 400))
-
             pg.display.update()
+
             #2秒の遅延後、終了する
             clock.tick(0.5)
             return
