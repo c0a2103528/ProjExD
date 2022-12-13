@@ -1,4 +1,5 @@
 import pygame as pg
+import random
 import sys
 
 def main():
@@ -12,6 +13,9 @@ def main():
     clock = pg.time.Clock()
 
     pg_x = 900; pg_y = 400
+    bm_x = random.randint(0, 1600)
+    bm_y = random.randint(0, 900)
+    
 
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct)
@@ -24,6 +28,12 @@ def main():
         pg_rct = pg_sfc.get_rect()
         pg_rct.center = pg_x, pg_y
         scrn_sfc.blit(pg_sfc, pg_rct)
+
+        vx = 1; vy =1
+        draw_sfc = pg.Surface((20, 20))
+        draw_sfc.set_colorkey((0,0,0))
+        pg.draw.circle(draw_sfc, (255, 0, 0), (10, 10), 10)
+        scrn_sfc.blit(draw_sfc, (bm_x, bm_y))
 
         key_lst = pg.key.get_pressed()
         if key_lst[pg.K_UP]:
