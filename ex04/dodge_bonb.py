@@ -15,6 +15,7 @@ def main():
     pg_x = 900; pg_y = 400
     bm_x = random.randint(0, 1600)
     bm_y = random.randint(0, 900)
+    vx = 1; vy =1
     
 
     while True:
@@ -29,13 +30,21 @@ def main():
         pg_rct.center = pg_x, pg_y
         scrn_sfc.blit(pg_sfc, pg_rct)
 
-        vx = 1; vy =1
         draw_sfc = pg.Surface((20, 20))
         draw_sfc.set_colorkey((0,0,0))
         pg.draw.circle(draw_sfc, (255, 0, 0), (10, 10), 10)
-        scrn_sfc.blit(draw_sfc, (bm_x, bm_y))
+        ball_rct = draw_sfc.get_rect()
+        ball_rct.center = bm_x, bm_y
+        scrn_sfc.blit(draw_sfc, ball_rct)
+        bm_x += vx; bm_y += vy
+
+        if (bm_x >= 1600) or (bm_x <= 0):
+            vx *= -1
+        if (bm_y >= 900) or (bm_y <= 0):
+            vy *= -1
 
         key_lst = pg.key.get_pressed()
+        bf_x = pg_x; bf_y = pg_y
         if key_lst[pg.K_UP]:
             pg_y -= 1
         elif key_lst[pg.K_DOWN]:
@@ -44,11 +53,15 @@ def main():
             pg_x -= 1
         elif key_lst[pg.K_RIGHT]:
             pg_x += 1
+        if (pg_x-45 <= 0) or (pg_x+45 >= 1600):
+            pg_x = bf_x
+        if (pg_y-65 <= 0) or (pg_y+65 >= 900):
+            pg_y = bf_y
+        
+        if pg_rct.colliderect(ball_rct):
+            return
 
         pg.display.update()
-
-
-
 
 if __name__ == "__main__":
     pg.init()
