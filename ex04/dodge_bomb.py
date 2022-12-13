@@ -86,7 +86,7 @@ def main():
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
-        
+
         #時間経過による爆弾の速度変化
         change_speed = 0.001
         if vx > 0:
@@ -117,7 +117,6 @@ def main():
 
         pg.display.update()
         clock.tick(1000)
-
 
 if __name__ == "__main__":
     pg.init()
