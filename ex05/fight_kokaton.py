@@ -124,6 +124,7 @@ class Text:
         scr.sfc.blit(text, xy)
 
 
+# スコアの設定
 class Score:
     def __init__(self):
         self.score = 0
@@ -135,6 +136,7 @@ class Score:
         fonto = pg.font.Font(None, 120)
         text = fonto.render(f"Score : {self.score}", True, "Black")
         scr.sfc.blit(text, (10, 10))
+
 
 # 跳ね返りの確認
 def check_bound(obj_rct, scr_rct):
@@ -196,6 +198,7 @@ def main():
                 bomb.stop(SR)
                 sc.add_score(point)
         
+        # スコアの更新・クリア判定
         sc.update(SR)
         if sc.score >= point * num:
             clear_txt = Text("Congratulations!", "Red", SR, (500, 300))
