@@ -43,6 +43,28 @@ class Bird:
         self.blit(scr)
 
 
+class Bomb:
+    def __init__(self, col, r, sp, scr):
+        self.sfc = pg.Surface((20, 20))
+        self.sfc.set_colorkey((0, 0, 0))
+        pg.draw.circle(self.sfc, col, (10, 10), r)
+        self.rct = self.sfc.get_rect()
+        self.rct.centerx = random.randint(0, scr.rct.width)
+        self.rct.centery = random.randint(0, scr.rct.height)
+        self.vx = sp[0]
+        self.vy = sp[1]
+    
+    def blit(self, scr):
+        scr.sfc.blit(self.sfc, self.rct)
+    
+    def update(self, scr):
+        self.rct.move_ip(self.vx, self.vy)
+        yoko, tate = check_bound(self.rct, scr.rct)
+        self.vx *= yoko
+        self.vy *= tate
+        self.blit(scr)
+
+
 def check_bound(obj_rct, scr_rct):
     yoko, tate = +1, +1
     if obj_rct.left < scr_rct.left or scr_rct.right < obj_rct.right:
@@ -54,25 +76,18 @@ def check_bound(obj_rct, scr_rct):
 
 def main():
     clock =pg.time.Clock()
-    # 練習１
     SR = Screen("逃げろ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
-
-    # 練習３
+    
     tori = Bird("fig/0.png", 2.0, (900, 400))
-    # sfcにtori_rctに従って，tori_sfcを貼り付ける
-    SR.sfc.blit(tori.sfc, tori.rct) 
 
-    # 練習５
-    bomb_sfc = pg.Surface((20, 20)) # 正方形の空のSurface
-    bomb_sfc.set_colorkey((0, 0, 0))
-    pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
-    bomb_rct = bomb_sfc.get_rect()
-    bomb_rct.centerx = random.randint(0, SR.rct.width)
-    bomb_rct.centery = random.randint(0, SR.rct.height)
-    SR.sfc.blit(bomb_sfc, bomb_rct) 
-    vx, vy = +1, +1
+    colors = ["Red", "Blue", "Green", "White", "Yellow"]
+    bombs = []
+    for i in range(5):
+        color = colors[i]
+        vx = random.choice([-1, 1])
+        vy = random.choice([-1, 1])
+        bombs.append(Bomb(color, 10, (vx, vy), SR))
 
-    # 練習２
     while True:
         SR.blit()
 
@@ -82,16 +97,10 @@ def main():
 
         tori.update(SR)
 
-        # 練習６
-        bomb_rct.move_ip(vx, vy)
-        SR.sfc.blit(bomb_sfc, bomb_rct) 
-        yoko, tate = check_bound(bomb_rct, SR.rct)
-        vx *= yoko
-        vy *= tate
-
-        # 練習８
-        if tori.rct.colliderect(bomb_rct):
-            return
+        for bomb in bombs:
+            bomb.update(SR)
+            if tori.rct.colliderect(bomb.rct):
+                return
 
         pg.display.update()
         clock.tick(1000)
