@@ -119,10 +119,22 @@ class Sword:
 # テキストの設定
 class Text:
     def __init__(self, txt, col, scr, xy):
-        self.fonto = pg.font.Font(None, 120)
-        self.text = self.fonto.render(txt, True, col)
-        scr.sfc.blit(self.text, xy)
+        fonto = pg.font.Font(None, 120)
+        text = fonto.render(txt, True, col)
+        scr.sfc.blit(text, xy)
 
+
+class Score:
+    def __init__(self):
+        self.score = 0
+
+    def add_score(self, point):
+        self.score += point
+        
+    def update(self, scr):
+        fonto = pg.font.Font(None, 120)
+        text = fonto.render(f"Score : {self.score}", True, "Black")
+        scr.sfc.blit(text, (10, 10))
 
 # 跳ね返りの確認
 def check_bound(obj_rct, scr_rct):
@@ -139,16 +151,22 @@ def main():
     # スクリーンの表示
     SR = Screen("戦え！こうかとん", (1600, 900), "fig/pg_bg.jpg")
 
-    # 操作キャラ、剣の表示
+    # 操作キャラ、剣表示
     tori = Bird("fig/6.png", 2.0, (900, 500))
     tori.update(SR)
     sw = Sword("fig/ken1.png", 0.2, (855, 500))
     sw.update(SR)
 
+    # スコアの設定・表示
+    point = 100
+    sc = Score()
+    sc.update(SR)
+
     #爆弾の色設定、進行方向の設定、表示
     colors = ["Red", "Blue", "Green", "Yellow", "Purple"]
     bombs = []
-    for i in range(5):
+    num = 5
+    for i in range(num):
         vx = random.choice([-1, 1])
         vy = random.choice([-1, 1])
         color = colors[i % 5]
@@ -176,6 +194,14 @@ def main():
         for bomb in bombs:
             if sw.rct.colliderect(bomb.rct):
                 bomb.stop(SR)
+                sc.add_score(point)
+        
+        sc.update(SR)
+        if sc.score >= point * num:
+            clear_txt = Text("Congratulations!", "Red", SR, (500, 300))
+            pg.display.update()
+            clock.tick(0.5)
+            return
 
         # ゲームオーバーの設定
         for bomb in bombs:
@@ -187,6 +213,7 @@ def main():
 
                 # ゲームオーバーテキストの表示
                 go_txt = Text("Game Over!", "Red", SR, (600, 300))
+                sc_txt = Text(f"Your Score : {sc.score}", "Black", SR, (550, 500))
                 pg.display.update()
 
                 clock.tick(0.5)
