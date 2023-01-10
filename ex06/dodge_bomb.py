@@ -18,8 +18,11 @@ def main():
     scrn_rct = scrn_sfc.get_rect()
 
     #背景設定
-    pgbg_sfc = pg.image.load("fig/pg_bg.jpg")
-    pgbg_rct = pgbg_sfc.get_rect()
+    bg_sfc = pg.image.load("fig/bg.png")
+    bg_rct = bg_sfc.get_rect()
+    gd_sfc = pg.image.load("fig/gd.png")
+    gd_rct = gd_sfc.get_rect()
+    gd_rct.center = scrn_rct.right/2, scrn_rct.bottom-250
 
     #こうかとんの設定
     tori_sfc1 = pg.image.load("fig/9.png")      #陸にいるとき
@@ -47,7 +50,8 @@ def main():
     vy = move_bomb[random.randint(0, 1)]
 
     while True:
-        scrn_sfc.blit(pgbg_sfc, pgbg_rct) 
+        scrn_sfc.blit(bg_sfc, bg_rct)
+        scrn_sfc.blit(gd_sfc, gd_rct)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -59,6 +63,7 @@ def main():
         txt = fonto.render(f"{sec/1000:.2f}", True, "BLACK")
         scrn_sfc.blit(txt, (800, 30))
 
+        """
         #こうかとんの移動
         key_dct = pg.key.get_pressed()
         bf_x = tori_rct.centerx
@@ -74,11 +79,7 @@ def main():
         if check_bound(tori_rct, scrn_rct) != (+1, +1):
             tori_rct.centerx = bf_x
             tori_rct.centery = bf_y
-        #こうかとんの画像の切り替え
-        if (tori_rct.centery >= 450):           #陸にいるとき(yが450以上のとき)
-            scrn_sfc.blit(tori_sfc1, tori_rct)
-        else:                                   #空にいるとき(yが450未満のとき)
-            scrn_sfc.blit(tori_sfc2, tori_rct) 
+        """
 
         #爆弾の移動
         bomb_rct.move_ip(vx, vy)
@@ -102,7 +103,7 @@ def main():
         #こうかとんとボールが重なった時
         if tori_rct.colliderect(bomb_rct):
             #泣いている画像に変更
-            scrn_sfc.blit(pgbg_sfc, pgbg_rct)
+            scrn_sfc.blit(bg_sfc, bg_rct)
             scrn_sfc.blit(tori_sfc3, tori_rct)
 
             #2秒の遅延後、終了する
