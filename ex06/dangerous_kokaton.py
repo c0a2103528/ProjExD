@@ -15,6 +15,8 @@ class Screen:
     def blit(self):
         self.sfc.blit(self.bgi_sfc, self.bgi_rct)
     
+
+# 背景の設定
 class BackGround:
     def __init__(self, file, xy):
         self.sfc = pg.image.load(file)
@@ -22,6 +24,7 @@ class BackGround:
         self.rct.center = xy
     def blit(self, scn):
         scn.sfc.blit(self.sfc, self.rct)
+
 
 # 操作キャラの設定
 class Bird:
@@ -118,6 +121,7 @@ def check_bound(obj_rct, scr_rct):
     return yoko, tate
 
 
+#バリアの設定
 class Protecter:
 
     key_delta = {
@@ -194,10 +198,10 @@ def main():
     
         for bomb in bombs:
             bomb.update(SR, bombs)
-            if prot.rct.colliderect(bomb.rct):
+            if prot.rct.colliderect(bomb.rct):  #バリアと爆弾がぶつかった時
                 bomb.restart(SR)
                 prot.count -= 1
-            if tori.rct.colliderect(bomb.rct):
+            if tori.rct.colliderect(bomb.rct):  #爆弾と操作キャラがぶつかった時
                 SR.blit()
                 GD.blit(SR)
                 tori.change_image("fig/10.png")
