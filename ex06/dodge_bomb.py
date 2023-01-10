@@ -3,6 +3,11 @@ import random
 import sys
 
 
+#終了
+def quit():
+    pg.quit()
+    sys.exit()
+
 # スクリーンの設定
 class Screen:
     def __init__(self, title, wh, file):
@@ -37,15 +42,21 @@ class Bird:
 
     # 入力キーによって移動 
     def update(self, scr):
+        global move, out_fin #移動許可、終了条件の変更 c0a21049
         key_dct = pg.key.get_pressed()
         for key, delta in self.key_delta.items():
-            if key_dct[key]:
-                self.rct.centerx += delta[0]
-                self.rct.centery += delta[1]
+            if move:#移動許可があれば C0A21049
+                if key_dct[key]:
+                    self.rct.centerx += delta[0]
+                    self.rct.centery += delta[1]
 
-            if check_bound(self.rct, scr.rct) != (+1, +1):
-                self.rct.centerx -= delta[0]
-                self.rct.centery -= delta[1]
+                if check_bound(self.rct, scr.rct) != (+1, +1):
+                    out_fin = True#場外に出たので終了する c0a21049
+            else:#移動許可がない時リスタートする c0a21049
+                if key_dct[pg.K_r]:
+                    move = True
+                    out_fin = False#場外判定を消す c0a21049
+                    self.change_image("fig/6.png")#画像を元に戻す c0a21049
         self.blit(scr)
     
     # 画像の変更
@@ -95,15 +106,16 @@ def check_bound(obj_rct, scr_rct):
 
 
 def main():
+    global move#移動許可、終了条件の変更 c0a21049
     clock =pg.time.Clock()
     # スクリーンの表示
-    SR = Screen("戦え！こうかとん", (600, 900), "fig/bg.png")
+    SR = Screen("危ない！こうかとん", (600, 900), "fig/bg.png")
     gd_sfc = pg.image.load("fig/gd.png")
     gd_rct = gd_sfc.get_rect()
     gd_rct.center = SR.rct.right/2, SR.rct.bottom-250
 
     # 操作キャラ、剣表示
-    tori = Bird("fig/6.png", 2.0, (200, 600))
+    tori = Bird("fig/6.png", 2.0, (300, 675))
     tori.update(SR)
 
     #爆弾の色設定、進行方向の設定、表示
@@ -120,31 +132,35 @@ def main():
     while True:
         SR.blit()
         SR.sfc.blit(gd_sfc, gd_rct)
-
+        #終了を判別する
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                return
+                quit()
         
         # 操作キャラ・剣の位置更新
         tori.update(SR)
 
-        # 陸上・空中によって画像変更
-        if (tori.rct.centery < 450):
-            tori.change_image("fig/3.png")
-        elif (tori.rct.centery >= 450):
-            tori.change_image("fig/5.png")
+        # # 陸上・空中によって画像変更
+        # if (tori.rct.centery < 450):
+        #     tori.change_image("fig/3.png")
+        # elif (tori.rct.centery >= 450):
+        #     tori.change_image("fig/5.png")
 
         # ゲームオーバーの設定
         for bomb in bombs:
             bomb.update(SR)
-            if tori.rct.colliderect(bomb.rct):
+            if tori.rct.colliderect(bomb.rct) or out_fin == True:
                 SR.blit()
-                tori.change_image("fig/10.png")
+                SR.sfc.blit(gd_sfc, gd_rct)
+                tori = Bird("fig/10.png", 2.0, (300, 675))
                 tori.update(SR)
+                #リスタートを促す文字を表示する
+                tmr = "Press the 'r' key and try again!"
+                fonto = pg.font.Font(None, 40)
+                txt = fonto.render(tmr, True, (0,0,0))
+                SR.sfc.blit(txt, (100,500))#c0a21049
                 pg.display.update()
-
-                clock.tick(0.5)
-                return
+                move = False#移動を許可しない c0a21049
 
         pg.display.update()
         clock.tick(1000)
@@ -152,6 +168,6 @@ def main():
 
 if __name__ == "__main__":
     pg.init()
+    move = True #移動許可 C0A21049
+    out_fin = False #場外による終了 c0a21049
     main()
-    pg.quit()
-    sys.exit()
