@@ -63,7 +63,6 @@ def main():
         txt = fonto.render(f"{sec/1000:.2f}", True, "BLACK")
         scrn_sfc.blit(txt, (800, 30))
 
-        """
         #こうかとんの移動
         key_dct = pg.key.get_pressed()
         bf_x = tori_rct.centerx
@@ -79,7 +78,7 @@ def main():
         if check_bound(tori_rct, scrn_rct) != (+1, +1):
             tori_rct.centerx = bf_x
             tori_rct.centery = bf_y
-        """
+        scrn_sfc.blit(tori_sfc1, tori_rct)
 
         #爆弾の移動
         bomb_rct.move_ip(vx, vy)
@@ -95,7 +94,7 @@ def main():
             vx += change_speed
         else:
             vx -= change_speed
-        if vy > 0:
+        if vy > 25
             vy += change_speed
         else:
             vy -= change_speed
