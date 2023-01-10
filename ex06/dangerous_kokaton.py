@@ -87,14 +87,16 @@ class Bomb:
     def blit(self, scr):
         scr.sfc.blit(self.sfc, self.rct)
     
+    #爆弾の移動
     def update(self, scr, bmlist):
         self.rct.move_ip(self.vx, self.vy)
         yoko, tate = check_bound(self.rct, scr.rct)
+        #爆弾が端に到達したとき
         if (yoko == -1) or (tate == -1):
             self.restart(scr)
         self.blit(scr)
 
-    #新しく爆弾を出現させる
+    #爆弾の位置の再設定
     def restart(self, scr):
         pos = random.randint(0, 3)
         x = random.choice([-1, 1])
@@ -141,20 +143,16 @@ class Protecter:
     def blit(self, scn):
         scn.sfc.blit(self.sfc, self.rct)
 
-    def update(self, scr):
+    #操作キャラに合わせたバリアの移動
+    def update(self, scr, tori):
         if self.count <= 0:
             self.delete(scr)
-        key_dct = pg.key.get_pressed()
-        for key, delta in self.key_delta.items():
-            if key_dct[key]:
-                self.rct.centerx += delta[0]
-                self.rct.centery += delta[1]
-
-            if check_bound(self.rct, scr.rct) != (+1, +1):
-                self.rct.centerx -= delta[0]
-                self.rct.centery -= delta[1]
+            return
+        self.rct.centerx = tori.rct.centerx
+        self.rct.centery = tori.rct.centery
         self.blit(scr)
     
+    #画面上からバリアを消去
     def delete(self, scr):
         self.rct.centerx = 2000
         self.rct.centery = 2000
@@ -166,14 +164,15 @@ def main():
     SR = Screen("戦え！こうかとん", (600, 900), "fig/bg.png")
     GD = BackGround("fig/gd.png", (SR.rct.right/2, SR.rct.bottom-250))
 
-    # 操作キャラ
+    # 操作キャラ表示
     tori = Bird("fig/6.png", 1.0, (200, 600))
     tori.update(SR)
 
+    #バリア表示
     prot = Protecter(1.0, tori)
-    prot.update(SR)
+    prot.update(SR, tori)
 
-    #爆弾設定
+    #爆弾設定・表示
     bombs = []
     num = 15
     for i in range(num):
@@ -192,10 +191,8 @@ def main():
         
         # 操作キャラの位置更新
         tori.update(SR)
-        prot.update(SR)
+        prot.update(SR, tori)
 
-        # ゲームオーバーの設定
-    
         for bomb in bombs:
             bomb.update(SR, bombs)
             if prot.rct.colliderect(bomb.rct):  #バリアと爆弾がぶつかった時
