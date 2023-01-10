@@ -87,16 +87,8 @@ class Bomb:
     def update(self, scr, bmlist):
         self.rct.move_ip(self.vx, self.vy)
         yoko, tate = check_bound(self.rct, scr.rct)
-        #爆弾が画面端に到達したとき
         if (yoko == -1) or (tate == -1):
             self.restart(scr)
-        self.blit(scr)
-
-    def stop(self, scr):
-        self.vx = 0
-        self.vy = 0
-        self.rct.centerx = scr.rct.width + 500
-        self.rct.centery = scr.rct.height + 500
         self.blit(scr)
 
     #新しく爆弾を出現させる
@@ -116,7 +108,7 @@ class Bomb:
         self.vy = vy[pos]
 
 
-# 跳ね返りの確認
+# 画面端にぶつかったか検知
 def check_bound(obj_rct, scr_rct):
     yoko, tate = +1, +1
     if obj_rct.left < scr_rct.left or scr_rct.right < obj_rct.right:
@@ -124,6 +116,44 @@ def check_bound(obj_rct, scr_rct):
     if obj_rct.top < scr_rct.bottom - 500 or scr_rct.bottom < obj_rct.bottom:
         tate = -1
     return yoko, tate
+
+
+class Protecter:
+
+    key_delta = {
+        pg.K_UP:    [0, -1],
+        pg.K_DOWN:  [0, +1],
+        pg.K_LEFT:  [-1, 0],
+        pg.K_RIGHT: [+1, 0],}
+
+    def __init__(self, rate, bird):
+        self.rate = rate
+        self.sfc = pg.image.load("fig/barrior.png")
+        self.sfc = pg.transform.rotozoom(self.sfc, 0, self.rate)
+        self.rct = self.sfc.get_rect()
+        self.rct.center = bird.rct.centerx, bird.rct.centery
+        self.count = 3
+    
+    def blit(self, scn):
+        scn.sfc.blit(self.sfc, self.rct)
+
+    def update(self, scr):
+        if self.count <= 0:
+            self.delete(scr)
+        key_dct = pg.key.get_pressed()
+        for key, delta in self.key_delta.items():
+            if key_dct[key]:
+                self.rct.centerx += delta[0]
+                self.rct.centery += delta[1]
+
+            if check_bound(self.rct, scr.rct) != (+1, +1):
+                self.rct.centerx -= delta[0]
+                self.rct.centery -= delta[1]
+        self.blit(scr)
+    
+    def delete(self, scr):
+        self.rct.centerx = 2000
+        self.rct.centery = 2000
 
 
 def main():
@@ -136,7 +166,10 @@ def main():
     tori = Bird("fig/6.png", 1.0, (200, 600))
     tori.update(SR)
 
-    #爆弾の色設定、進行方向の設定、表示
+    prot = Protecter(1.0, tori)
+    prot.update(SR)
+
+    #爆弾設定
     bombs = []
     num = 15
     for i in range(num):
@@ -155,11 +188,15 @@ def main():
         
         # 操作キャラの位置更新
         tori.update(SR)
+        prot.update(SR)
 
         # ゲームオーバーの設定
     
         for bomb in bombs:
             bomb.update(SR, bombs)
+            if prot.rct.colliderect(bomb.rct):
+                bomb.restart(SR)
+                prot.count -= 1
             if tori.rct.colliderect(bomb.rct):
                 SR.blit()
                 GD.blit(SR)
