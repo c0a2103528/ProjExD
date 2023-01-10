@@ -91,12 +91,12 @@ class Bomb:
     def update(self, scr, bmlist):
         self.rct.move_ip(self.vx, self.vy)
         yoko, tate = check_bound(self.rct, scr.rct)
-        #爆弾が端に到達したとき
+        #爆弾が端に到達したとき C0A21035
         if (yoko == -1) or (tate == -1):
             self.restart(scr)
         self.blit(scr)
 
-    #爆弾の位置の再設定
+    #爆弾の位置の再設定 C0A21035
     def restart(self, scr):
         pos = random.randint(0, 3)
         x = random.choice([-1, 1])
@@ -123,7 +123,7 @@ def check_bound(obj_rct, scr_rct):
     return yoko, tate
 
 
-#バリアの設定
+#バリアの設定 C0A21035
 class Protecter:
 
     key_delta = {
@@ -168,11 +168,11 @@ def main():
     tori = Bird("fig/6.png", 1.0, (200, 600))
     tori.update(SR)
 
-    #バリア表示
+    # バリア表示 C0A21035
     prot = Protecter(1.0, tori)
     prot.update(SR, tori)
 
-    #爆弾設定・表示
+    # 爆弾設定・表示
     bombs = []
     num = 15
     for i in range(num):
@@ -195,7 +195,7 @@ def main():
 
         for bomb in bombs:
             bomb.update(SR, bombs)
-            if prot.rct.colliderect(bomb.rct):  #バリアと爆弾がぶつかった時
+            if prot.rct.colliderect(bomb.rct):  #バリアと爆弾がぶつかった時 C0A21035
                 bomb.restart(SR)
                 prot.count -= 1
             if tori.rct.colliderect(bomb.rct):  #爆弾と操作キャラがぶつかった時
