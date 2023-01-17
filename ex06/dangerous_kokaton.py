@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 import sys
+import time
 
 # ゲーム状態の判断(タイトル/ゲーム画面の推移に使用) written by c0a21099
 TITLE, STAGE = range(2)
@@ -34,10 +35,10 @@ class BackGround:
 class Bird:
 
     key_delta = {
-        pg.K_UP:    [0, -1],
-        pg.K_DOWN:  [0, +1],
-        pg.K_LEFT:  [-1, 0],
-        pg.K_RIGHT: [+1, 0],}
+        pg.K_UP:    [0, -2],
+        pg.K_DOWN:  [0, +2],
+        pg.K_LEFT:  [-2, 0],
+        pg.K_RIGHT: [+2, 0],}
 
     def __init__(self, fig, rate, xy):
         self.rate = rate
@@ -187,12 +188,13 @@ def text(scr, fnt, size, wrd, col, xy):
 
 #経過時間を表示  c0a21121
 def timer(scr, jikan):
-    text(scr, None, 80, f"{int(jikan/1000)} sec", 0, (240,20))
+    text(scr, None, 80, f"{jikan:.1f} sec", 0, (240,20))
 
 
 #ゲームスコアを表示 c0a21121
 def score(scr, jikan):
-    text(scr, None, 120, f"{int(jikan/1000) * 100}Points", (0,100,0), (100,300))
+    jikan *= 100
+    text(scr, None, 120, f"{jikan:.0f} Points", (0,100,0), (100,300))
 
 
 def main():
@@ -213,7 +215,7 @@ def main():
 
     # 爆弾設定・表示
     bombs = []
-    num = 5
+    num = 20
     for i in range(num):
         vx = random.choice([-1, 1])
         vy = random.choice([-1, 1])
@@ -222,6 +224,8 @@ def main():
 
     # title画面の画像
     logo = BackGround("fig/logo.png", (300, 300))
+
+    st = time.time()
 
     while True:
         SR.blit()
@@ -247,6 +251,7 @@ def main():
                     # spaceを押したらgame_stateをSTAGEにし, ゲームを開始する
                     if event.key == pg.K_SPACE:
                         game_state = STAGE
+                        st = time.time()
         
         elif game_state == STAGE:
             # 操作キャラの位置更新
@@ -263,11 +268,10 @@ def main():
                     GD.blit(SR)
                     tori.change_image("fig/10.png")
                     tori.update(SR)
-
                     #終了時の経過時間の表示 c0a21121
-                    timer(SR, now)
+                    timer(SR, tmr)
                     #終了時のゲームスコアの表示 c0a21121
-                    score(SR, now)
+                    score(SR, tmr)
 
                     #リスタートを促す文字を表示する
                     text(SR, None, 40, "Press the 'r' key and try again!", 0, (100, 500))
@@ -276,8 +280,10 @@ def main():
                     move = False#移動を許可しない c0a21049
 
             #時間の表示 c0a21121
-
-            timer(SR, now)
+            if move:
+                ed = time.time()
+                tmr = ed-st
+            timer(SR, tmr)
 
             pg.display.update()
             clock.tick(1000)
