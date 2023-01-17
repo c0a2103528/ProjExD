@@ -71,7 +71,7 @@ class Bird:
                     sys.exit()
         self.blit(scr)
 
-        #津野翔哉担当　C0A21089
+        #マウスカーソル C0A21089
         for event in pg.event.get():
             if move:
                 if event.type == pg.MOUSEMOTION:   #もしイベントタイプががMOUSEMOTIONなら
