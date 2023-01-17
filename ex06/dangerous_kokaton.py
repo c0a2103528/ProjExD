@@ -38,7 +38,12 @@ class Bird:
         pg.K_UP:    [0, -2],
         pg.K_DOWN:  [0, +2],
         pg.K_LEFT:  [-2, 0],
-        pg.K_RIGHT: [+2, 0],}
+        pg.K_RIGHT: [+2, 0],
+        pg.K_w:     [0, -2],
+        pg.K_s:     [0, +2],
+        pg.K_a:     [-2, 0],
+        pg.K_d:     [+2, 0]
+        }
 
     def __init__(self, fig, rate, xy):
         self.rate = rate
